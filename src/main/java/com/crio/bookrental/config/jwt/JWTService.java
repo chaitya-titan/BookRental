@@ -12,7 +12,7 @@ public class JWTService {
     Dotenv dotenv = Dotenv.configure().load();
     String alogSecret = dotenv.get("ALGORITHM_SECRET");
 
-    private Algorithm algorithm = Algorithm.HMAC256(alogSecret);
+    private final Algorithm algorithm = Algorithm.HMAC256(alogSecret);
 
     public String generateToken(Long id) {
         return JWT.create()

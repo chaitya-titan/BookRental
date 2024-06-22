@@ -20,12 +20,12 @@ public class JWTAuthentication implements Authentication {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return null;
     }
 
     @Override
-    public Object getCredentials() {
-        return null;
+    public String getCredentials() {
+        return token;
     }
 
     @Override
@@ -34,13 +34,13 @@ public class JWTAuthentication implements Authentication {
     }
 
     @Override
-    public Object getPrincipal() {
-        return null;
+    public Long getPrincipal() {
+        return userId;
     }
 
     @Override
     public boolean isAuthenticated() {
-        return false;
+        return userId != null;
     }
 
     @Override
@@ -50,6 +50,6 @@ public class JWTAuthentication implements Authentication {
 
     @Override
     public String getName() {
-        return "";
+        return null;
     }
 }

@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -18,9 +19,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain) throws ServletException, IOException {
+           @NonNull HttpServletRequest request,
+           @NonNull HttpServletResponse response,
+           @NonNull FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         final String token;
         final Long userId;
@@ -28,7 +29,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-        token = authHeader.split(" ")[1];
+        token = jwtService.getTokenFromHeader(authHeader);
         userId = jwtService.getUserIDFromJWT(token);
         if(userId != null && SecurityContextHolder.getContext().getAuthentication() == null){
             JWTAuthentication jwtAuthentication = new JWTAuthentication(token);

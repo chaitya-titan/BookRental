@@ -14,6 +14,10 @@ public class Book extends BaseModel{
     private String author;
     private String genre;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User createdByUser;
+
     @Enumerated(EnumType.ORDINAL)
     @Column(name = "status")
     private BookStatus availabilityStatus;
