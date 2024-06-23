@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class Rental extends BaseModel{
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private User rentedBy;
 
     @ManyToOne
     @JoinColumn(name = "book_id")

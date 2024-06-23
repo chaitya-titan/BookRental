@@ -37,4 +37,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleBookNotFoundException(BookNotFoundException exception) {
         return ResponseEntity.status(404).body(exception.getMessage());
     }
+
+    @ExceptionHandler(value = MaximumBooksRentedException.class)
+    public ResponseEntity<String> handleMaximumBooksRentedException(MaximumBooksRentedException exception) {
+        return ResponseEntity.status(400).body(exception.getMessage());
+    }
+
+    @ExceptionHandler(value = WrongUserException.class)
+    public ResponseEntity<String> handleWrongUserException(WrongUserException exception) {
+        return ResponseEntity.status(400).body(exception.getMessage());
+    }
 }
