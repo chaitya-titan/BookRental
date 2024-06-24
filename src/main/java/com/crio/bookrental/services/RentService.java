@@ -19,6 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +40,8 @@ public class RentService {
     @Autowired
     private final ModelMapper modelMapper;
 
+    private static final Logger logger = LoggerFactory.getLogger(RentService.class);
+
     public RentService(BookRepository bookRepository, RentalRepository rentalRepository, UserRepository userRepository, JWTService jwtService, ModelMapper modelMapper) {
         this.bookRepository = bookRepository;
         this.rentalRepository = rentalRepository;
@@ -53,6 +58,7 @@ public class RentService {
                 allBooks.add(modelMapper.map(book, BookResponseDTO.class));
             }
         }
+        logger.info("{} books are available", allBooks.size());
         return allBooks;
     }
 
@@ -79,6 +85,7 @@ public class RentService {
         rental.setRentedBy(user.get());
         rental.setBook(book.get());
         rental.setCreatedAt(LocalDate.now());
+        logger.info("Book {} is rented by user {}", book.get().getId(), user.get().getId());
         return modelMapper.map(rentalRepository.save(rental), RentResponseDTO.class);
     }
 
@@ -103,5 +110,6 @@ public class RentService {
         rentalRepository.save(rental);
         book.get().setAvailabilityStatus(BookStatus.AVAILABLE);
         bookRepository.save(book.get());
+        logger.info("Book {} is returned by user {}", book.get().getId(), user.get().getId());
     }
 }

@@ -21,6 +21,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class BookService {
@@ -32,6 +34,8 @@ public class BookService {
     private final JWTService jwtService;
     @Autowired
     private final UserRepository userRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(BookService.class);
 
     public BookService(BookRepository bookRepository, ModelMapper modelMapper,
                        JWTService jwtService, UserRepository userRepository) {
@@ -52,6 +56,7 @@ public class BookService {
         book.setAvailabilityStatus(BookStatus.AVAILABLE);
         book.setCreatedByUser(user);
         book = bookRepository.save(book);
+        logger.info("Book {} created successfully", book.getId());
         return modelMapper.map(book, BookResponseDTO.class);
     }
 
@@ -64,6 +69,7 @@ public class BookService {
         Book book = bookRepository.findById(id).get();
         modelMapper.map(editBookDTO, book);
         book = bookRepository.save(book);
+        logger.info("Book {} updated successfully", book.getId());
         return modelMapper.map(book, BookResponseDTO.class);
     }
 
@@ -78,6 +84,7 @@ public class BookService {
             throw new BookNotFoundException("Book not found");
         }
         bookRepository.delete(book.get());
+        logger.info("Book {} deleted successfully", book.get().getId());
     }
 
     public List<BookResponseDTO> getAllBooks(){
@@ -86,6 +93,7 @@ public class BookService {
         for(Book book: books){
             allBooks.add(modelMapper.map(book, BookResponseDTO.class));
         }
+        logger.info("{} books are available", allBooks.size());
         return allBooks;
     }
 }

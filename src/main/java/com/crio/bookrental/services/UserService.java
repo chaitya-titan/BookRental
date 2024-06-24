@@ -17,10 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.time.LocalDate;
 
 @Service
 public class UserService {
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     @Autowired
     private final UserRepository userRepository;
 
@@ -49,6 +53,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.USER);
         User savedUser = userRepository.save(user);
+        logger.info("User {} registered successfully", user.getEmail());
         return modelMapper.map(savedUser, UserResponseDTO.class);
     }
 
@@ -62,6 +67,7 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(Role.ADMIN);
         User savedUser = userRepository.save(user);
+        logger.info("Admin {} registered successfully", user.getEmail());
         return modelMapper.map(savedUser, UserResponseDTO.class);
     }
 
@@ -75,6 +81,8 @@ public class UserService {
         }
         LoginResponseDTO loginResponseDTO = modelMapper.map(user, LoginResponseDTO.class);
         loginResponseDTO.setToken(jwtService.generateToken(user.getId()));
+        logger.info("User {} logged in successfully", user.getEmail());
+        logger.info("User is a {}", user.getRole());
         return loginResponseDTO;
     }
 }
